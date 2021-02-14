@@ -1,5 +1,5 @@
 Dimension screenS;
-Button btnCreate, btnSolve, btnRunSolve;
+Button btnCreate, btnMap, btnSolve;
 
 MazeCreator mazeCreator;
 MazeSolver mazeSolver;
@@ -16,14 +16,14 @@ void setup() {
       mazeSolver.solved = false;
     }
   };
-  btnSolve = new Button("solve", 80, 0, 80, 20) {
+  btnMap = new Button("map", 80, 0, 80, 20) {
     public void onClick() {
       mazeSolver.solve(maze);
     }
   };
-  btnRunSolve = new Button("run solve", 160, 0, 80, 20) {
+  btnSolve = new Button("solve", 160, 0, 80, 20) {
     public void onClick() {
-      btnSolve.onClick();
+      btnMap.onClick();
       mazeSolver.running = true;
     }
   };
@@ -38,14 +38,14 @@ void draw() {
   if (delay != 0) return;
   background(0);
   btnCreate.render();
+  btnMap.render();
   btnSolve.render();
-  btnRunSolve.render();
   maze.render(20, 20, screenS.w - 40, screenS.h - 40);
   mazeSolver.render(20, 20, screenS.w - 40, screenS.h - 40);
 }
 
 void mouseClicked() {
   btnCreate.mouseClicked();
+  btnMap.mouseClicked();
   btnSolve.mouseClicked();
-  btnRunSolve.mouseClicked();
 }
