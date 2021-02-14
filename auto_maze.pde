@@ -11,7 +11,7 @@ void setup() {
   screenS = new Dimension(700, 700);
   btnCreate = new Button("new", 0, 0, 80, 20) {
     public void onClick() {
-      maze = mazeCreator.newMaze(101);
+      maze = mazeCreator.newMaze(15);
       mazeSolver.maze = null;
       mazeSolver.solved = false;
     }

@@ -1,6 +1,7 @@
 class MazeCreator {
   
   Maze newMaze(int size) {
+      if (size % 2 == 0) size++; // to ensure only odd numbers
       int newSize = size * 2 + 3;
       boolean[][] map = new boolean[newSize][newSize];
       //Body and corners

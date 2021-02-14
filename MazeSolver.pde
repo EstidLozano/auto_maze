@@ -92,7 +92,7 @@ class MazeSolver {
     y += h / 2;
     fill(255);
     textAlign(CENTER, CENTER);
-    textSize(h * 0.7);
+    textSize(h * 0.5);
     text(txt, x, y);
   }
   
