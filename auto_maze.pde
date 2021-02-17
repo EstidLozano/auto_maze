@@ -1,51 +1,46 @@
-Dimension screenS;
-Button btnCreate, btnMap, btnSolve;
+Dimension size = new Dimension(700, 700);
 
-MazeCreator mazeCreator;
-MazeSolver mazeSolver;
+Button btnNew, btnSolve;
+
+GenMazeAldous genMaze;
+SolveMazeBackTrack solveMaze;
 Maze maze;
-int delay = 5;
 
 void setup() {
   size(700, 700);
-  screenS = new Dimension(700, 700);
-  btnCreate = new Button("new", 0, 0, 80, 20) {
+  
+  btnNew = new Button("new", 0, 0, 100, 20) {
     public void onClick() {
-      maze = mazeCreator.newMaze(15);
-      mazeSolver.maze = null;
-      mazeSolver.solved = false;
+      maze = genMaze.newMaze(20, 20, new Point(30, 30), new Dimension(size.w - 60, size.h - 60));
+      solveMaze.rute = null;
     }
   };
-  btnMap = new Button("map", 80, 0, 80, 20) {
+  btnSolve = new Button("solve", 100, 0, 100, 20) {
     public void onClick() {
-      mazeSolver.solve(maze);
-    }
-  };
-  btnSolve = new Button("solve", 160, 0, 80, 20) {
-    public void onClick() {
-      btnMap.onClick();
-      mazeSolver.running = true;
+      if (genMaze.isGenerated()) solveMaze.solveMaze(maze);
     }
   };
   
-  mazeCreator = new MazeCreator();
-  mazeSolver = new MazeSolver();
-  btnCreate.onClick();
+  genMaze = new GenMazeAldous();
+  solveMaze = new SolveMazeBackTrack();
+  btnNew.onClick();
 }
 
+int skip = 20, frame = 0;
 void draw() {
-  delay = ++delay % 5;
-  if (delay != 0) return;
+  // if (frame++ % skip != 0) return;
   background(0);
-  btnCreate.render();
-  btnMap.render();
-  btnSolve.render();
-  maze.render(20, 20, screenS.w - 40, screenS.h - 40);
-  mazeSolver.render(20, 20, screenS.w - 40, screenS.h - 40);
+  genMaze.nextStep();
+  if (genMaze.isGenerated()) {
+    solveMaze.nextStep();
+    solveMaze.draw();
+  }
+  maze.draw();
+  btnNew.draw();
+  btnSolve.draw();
 }
 
 void mouseClicked() {
-  btnCreate.mouseClicked();
-  btnMap.mouseClicked();
+  btnNew.mouseClicked();
   btnSolve.mouseClicked();
 }

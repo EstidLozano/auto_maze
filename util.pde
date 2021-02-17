@@ -32,6 +32,24 @@ public static class LinkedList<T> implements Iterable<T> {
     return last.value;
   }
   
+  public T get(int index) {
+    Node<T> n = getNode(index);
+    return n == null ? null : n.value;
+  }
+  
+  private Node<T> getNode(int index) {
+    if (index < size / 2) {
+      Node<T> i = first;
+      while(index-- > 0) i = i.next;
+      return i;
+    } else {
+      index = size - 1 - index;
+      Node<T> i = last;
+      while(index-- > 0) i = i.prev;
+      return i;
+    }
+  }
+  
   public void addFirst(T value) {
     first = new Node(value, null, first);
     if (size == 0) last = first;
@@ -55,6 +73,21 @@ public static class LinkedList<T> implements Iterable<T> {
     if (last == null) return;
     last = last.prev;
     if (last != null) last.next = null;
+    size--;
+  }
+  
+  public void remove(int index) {
+    if (index == 0) {
+      removeFirst();
+      return;
+    }
+    if (index == size - 1) {
+      removeLast();
+      return;
+    }
+    Node<T> node = getNode(index);
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
     size--;
   }
   
@@ -135,7 +168,7 @@ abstract class Button {
     this.h = h;
   }
   
-  void render() {
+  void draw() {
     fill(255, 255, 255);
     stroke(100);
     strokeWeight(2);
