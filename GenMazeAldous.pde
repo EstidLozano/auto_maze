@@ -20,20 +20,20 @@ class GenMazeAldous extends GenMaze {
   
   void nextStep() {
     if (isGenerated()) return;
-    visits[p.x][p.y] = 2;
+    visits[(int) p.x][(int) p.y] = 2; // visited
     for (byte dir : directions) {
-      q = maze.getNeighboor(p.x, p.y, dir);
-      if (q != null && visits[q.x][q.y] == 0) {
+      q = maze.getNeighboor((int) p.x, (int) p.y, dir);
+      if (q != null && visits[(int) q.x][(int) q.y] == 0) {
         neighs.addLast(q);
-        visits[q.x][q.y]++;
+        visits[(int) q.x][(int) q.y]++; // neighboor
       }
     }
     int neigh = (int)(Math.random() * neighs.size);
     p = neighs.get(neigh);
     for (int i = (int) (Math.random() * 4), c = 0; c <= 3; c++, i = ++i % 4) {
-      q = maze.getNeighboor(p.x, p.y, directions[i]);
-      if (q != null && visits[q.x][q.y] == 2) {
-        maze.setWall(p.x, p.y, directions[i], true);
+      q = maze.getNeighboor((int) p.x, (int) p.y, directions[i]);
+      if (q != null && visits[(int) q.x][(int) q.y] == 2) {
+        maze.setWall((int) p.x, (int) p.y, directions[i], true);
         neighs.remove(neigh);
         break;
       }

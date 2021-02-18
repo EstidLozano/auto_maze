@@ -24,12 +24,13 @@ class SolveMazeBackTrack extends SolveMaze {
   
   void nextStep() {
     if (rute == null || isSolved()) return;
-    visits[p.x][p.y] = true;
+    visits[(int) p.x][(int) p.y] = true;
     
     byte dir = (byte)(Math.random() * 4);
     for (int i = 0; i <= 3; i++) {
-      q = maze.getNeighboor(p.x, p.y, dirs[dir]);
-      if (q != null && !visits[q.x][q.y] && maze.canGoTo(p.x, p.y, dirs[dir])) {
+      q = maze.getNeighboor((int) p.x, (int) p.y, dirs[dir]);
+      if (q != null && !visits[(int) q.x][(int) q.y]
+          && maze.canGoTo((int) p.x, (int) p.y, dirs[dir])) {
         rute.addLast(q);
         p = q;
         return;
@@ -48,7 +49,7 @@ class SolveMazeBackTrack extends SolveMaze {
         if (visits[i][j]) {
           fill(150);
           strokeWeight(0);
-          stroke(100);
+          stroke(150);
           rect(maze.position.x + maze.cellSize.w * i,
               maze.position.y + maze.cellSize.h * j,
               maze.cellSize.w, maze.cellSize.h);
@@ -57,9 +58,9 @@ class SolveMazeBackTrack extends SolveMaze {
     }
     for (Point p : rute) {
       if (p.x == this.p.x && p.y == this.p.y) {
-        drawCircle(p.x, p.y, (cS.w + cS.h) / 3, 0xffffff00);
+        drawCircle((int) p.x, (int) p.y, (cS.w + cS.h) / 3, 0xffffff00);
       } else {
-        drawCircle(p.x, p.y, (cS.w + cS.h) / 6, 255);
+        drawCircle((int) p.x, (int) p.y, (cS.w + cS.h) / 6, 255);
       }
     }
   }

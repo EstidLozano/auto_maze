@@ -39,7 +39,7 @@ class Maze {
     return isOut(x, y) ? null : new Point(x, y);
   }
   
-  byte oppositeDirection(short direction) {
+  byte oppositeDirection(byte direction) {
     if (direction == UP) return DOWN;
     if (direction == RIGHT) return LEFT;
     if (direction == DOWN) return UP;
@@ -49,13 +49,13 @@ class Maze {
   void setWall(int x, int y, byte direction, boolean open) {
     if (isOut(x, y)) return;
     Point neigh = getNeighboor(x, y, direction);
-    if (isOut(neigh.x, neigh.y)) return;
+    if (isOut((int) neigh.x, (int) neigh.y)) return;
     if (open) {
       cells[x][y] |= direction;
-      cells[neigh.x][neigh.y] |= oppositeDirection(direction);
+      cells[(int) neigh.x][(int) neigh.y] |= oppositeDirection(direction);
     } else {
       cells[x][y] -= cells[x][y] & direction;
-      cells[neigh.x][neigh.y] -= cells[x][y] & oppositeDirection(direction);
+      cells[(int) neigh.x][(int) neigh.y] -= cells[x][y] & oppositeDirection(direction);
     }
   }
   
@@ -95,7 +95,7 @@ class Maze {
     line(x1, y1, x2, y2);
   }
   
-  private void drawRect(int x, int y, color col) {
+  private void drawRect(float x, float y, color col) {
     fill(col);
     strokeWeight(0);
     stroke(col);

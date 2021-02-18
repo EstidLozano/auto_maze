@@ -135,9 +135,9 @@ public static class LinkedList<T> implements Iterable<T> {
 
 public static class Point {
 
-  int x, y;
+  float x, y;
   
-  Point(int x, int y) {
+  Point(float x, float y) {
     this.x = x;
     this.y = y;
   }
@@ -146,9 +146,9 @@ public static class Point {
 
 public static class Dimension {
 
-  int w, h;
+  float w, h;
   
-  Dimension(int w, int h) {
+  Dimension(float w, float h) {
     this.w = w;
     this.h = h;
   }
@@ -157,34 +157,114 @@ public static class Dimension {
 
 abstract class Button {
   
-  float x, y, w, h;
+  Point pos;
+  Dimension size;
+  float stroke;
+  int colBg, colHoverBg, colStroke, colHoverStroke, colTxt, colHoverTxt;
   String txt;
   
-  Button(String txt, float x, float y, float w, float h) {
+  Button(String txt, Point position, Dimension size) {
     this.txt = txt;
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    this.pos = position;
+    this.size = size;
+    
+    stroke = 2;
+    
+    colBg     = 0xffffffff;
+    colStroke = 0xff888888;
+    colTxt    = 0xff444444;
+    
+    colHoverBg     = 0xffcccccc;
+    colHoverStroke = 0xff666666;
+    colHoverTxt    = 0xff333333;
   }
   
   void draw() {
-    fill(255, 255, 255);
-    stroke(100);
-    strokeWeight(2);
-    rect(x, y, w, h);
-    fill(0);
+    strokeWeight(stroke);
+    if (mouseHover()) {
+      stroke(colHoverStroke);
+      fill(colHoverBg);
+      rect(pos.x, pos.y, size.w, size.h);
+      fill(colHoverTxt);
+    } else {
+      stroke(colStroke);
+      fill(colBg);
+      rect(pos.x, pos.y, size.w, size.h);
+      fill(colTxt);
+    }
     textAlign(CENTER, CENTER);
-    textSize(h * 0.7);
-    text(txt, x + w / 2, y + h / 2);
+    textSize(size.h * 0.7);
+    text(txt, pos.x + size.w / 2, pos.y + size.h / 2);
   }
   
   abstract void onClick();
   
-  void mouseClicked() {
-    if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h) {
+  boolean mouseHover() {
+    return mouseX >= pos.x && mouseX <= pos.x + size.w
+        && mouseY >= pos.y && mouseY <= pos.y + size.h;
+  }
+  
+  boolean mouseClicked() {
+    if (mouseHover()) {
       onClick();
+      return true;
     }
+    return false;
+  }
+  
+}
+
+class DropdownList {
+
+  Dimension size;
+  Point pos;
+  
+  String[] elements;
+  private Button[] btns;
+  private Button btnCurrent;
+  
+  int selection;
+  boolean dropped;
+  
+  DropdownList (String[] elements, Point position, Dimension size) {
+    this.elements = elements;
+    this.size = size;
+    this.pos = position;
+    
+    btns = new Button[elements.length];
+    for (int i = elements.length - 1; i >= 0; i--) {
+      final int fI = i;
+      btns[i] = new Button(elements[i], new Point(pos.x, pos.y + size.h * (i + 1)), size) {
+        void onClick() {
+          selection = fI;
+          btnCurrent.txt = btns[selection].txt;
+          btnCurrent.onClick();
+        }
+      };
+    }
+    btnCurrent = new Button(btns[selection].txt, pos, size) {
+      void onClick() {
+        dropped = !dropped;
+      }
+    };
+  }
+  
+  void draw() {
+    if (dropped) {
+      for(Button i : btns) i.draw();
+    } else {
+      btnCurrent.draw();
+    }
+    
+  }
+  
+  boolean mouseClicked() {
+    for (Button i : btns) {
+      if (i.mouseClicked()) return true;
+    }
+    if (btnCurrent.mouseClicked()) return true;
+    dropped = false;
+    return false;
   }
   
 }
